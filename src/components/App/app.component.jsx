@@ -1,49 +1,46 @@
 import CardList from '../CardList/cardlist.component';
 import SearchBox from '../SearchBox/searchbox.component';
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSearchField } from '../../store/actions';
+import { selectSearchField } from '../../store/selectors';
 import Scroll from '../Scroll/scroll.component';
 import ErrorBoundary from '../Error Boundary/errorboundary.component';
 import './app.css';
+import { click } from '@testing-library/user-event/dist/click';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      robots: [],
-      searchfield: '',
-    };
-  }
+const App = () => {
+  const dispatch = useDispatch();
+  const searchField = useSelector(selectSearchField);
+  const [robots, setRobots] = useState([]);
 
-  componentDidMount() {
+  useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/users')
       .then(response => response.json())
-      .then(users => this.setState({ robots: users }));
-  }
+      .then(users => setRobots(users));
+  }, []);
 
-  handleChange = event => {
-    const input = event.target.value;
-    this.setState({ searchfield: input });
+  const handleChange = e => {
+    dispatch(setSearchField(e.target.value));
   };
 
-  render() {
-    const { robots, searchfield } = this.state;
-    const filteredRobots = robots.filter(robot =>
-      robot.name.toLowerCase().includes(searchfield.toLowerCase())
-    );
-    return !robots.length ? (
-      <h1>Loading</h1>
-    ) : (
-      <div className="tc ">
-        <h1 className="f1">RoboFriends</h1>
-        <SearchBox searchChange={this.handleChange} />
-        <ErrorBoundary>
-          <Scroll>
-            <CardList data={filteredRobots} />
-          </Scroll>
-        </ErrorBoundary>
-      </div>
-    );
-  }
-}
+  const filteredRobots = robots.filter(robot =>
+    robot.name.toLowerCase().includes(searchField.toLowerCase())
+  );
+
+  return !robots.length ? (
+    <h1>Loading</h1>
+  ) : (
+    <div className="tc ">
+      <h1 className="f1">RoboFriends</h1>
+      <SearchBox searchChange={handleChange} />
+      <ErrorBoundary>
+        <Scroll>
+          <CardList data={filteredRobots} />
+        </Scroll>
+      </ErrorBoundary>
+    </div>
+  );
+};
 
 export default App;

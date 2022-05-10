@@ -1,4 +1,3 @@
-import App from '../App/app.component';
 import Card from '../Card/card.component';
 
 const CardList = ({ data }) => {
