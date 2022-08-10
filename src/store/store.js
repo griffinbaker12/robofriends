@@ -1,7 +1,7 @@
 import { createStore } from 'redux';
 import { combineReducers } from 'redux';
-import { searchReducer } from './reducers';
-import { robotsReducer } from './reducers';
+import { searchReducer } from './reducers.ts';
+import { robotsReducer } from './reducers.ts';
 
 export const rootReducer = combineReducers({
   searchField: searchReducer,

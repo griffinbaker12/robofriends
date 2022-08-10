@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 const SearchBox = () => {
   const dispatch = useDispatch();
   const handleChange = e => dispatch(setSearchField(e.target.value));
+
   return (
     <div className="pa2">
       <input
